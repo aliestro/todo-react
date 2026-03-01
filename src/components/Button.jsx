@@ -1,6 +1,15 @@
-const Button = () => {
+const Button = (props) => {
+	const {
+		className = '',
+		type = 'button',
+		children,
+	} = props
 	return (
-		<button className="button" type="submit">Add</button>
+		<button
+			className={`button ${className}`}
+			type={type}>
+			{children}
+		</button>
 	)
 }
 
