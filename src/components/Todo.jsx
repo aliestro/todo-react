@@ -1,42 +1,80 @@
+import { useEffect, useState } from 'react'
 import AddTaskForm from './AddTaskForm'
 import SearchTaskForm from './SearchTaskForm'
 import TodoInfo from './TodoInfo'
 import TodoList from './TodoList'
 
 const Todo = () => {
-	const tasks = [
-		{ id: 'task-1', title: 'Посмотреть видео про паттерны', isDone: false },
-		{ id: 'task-2', title: 'Покушать хурму', isDone: false },
-	]
+	const [tasks, setTasks] = useState(() => {
+		const savedTasks = localStorage.getItem('tasks');
+
+		if (savedTasks) {
+			return JSON.parse(savedTasks);
+		}
+		return [
+			{ id: 'task-1', title: 'Посмотреть видео про паттерны', isDone: false },
+			{ id: 'task-2', title: 'Покушать хурму', isDone: false },
+		];
+	})
+
+
+	const [newTaskTitle, setNewTaskTitle] = useState('');
+	const [searchQuery, setSearchQuery] = useState('');
 
 	const deleteAllTasks = () => {
-		console.log('Delete all tasks')
+		const isConfirmed = confirm('Вы действительно хотите удалить все задачи?');
+
+		if (isConfirmed) {
+			setTasks([]);
+		}
 	}
 
 	const deleteTask = (taskId) => {
-		console.log('Delete task', taskId)
+		// console.log('Delete task', taskId)
+		setTasks(
+			tasks.filter((task) => task.id !== taskId)
+		)
 	}
 
 	const ToggleTaskComplete = (taskId, isDone) => {
-		console.log(`Задача ${taskId} ${isDone ? 'выполнена' : 'не выполнена'}`)
-	}
-
-	const filterTasks = (query) => {
-		console.log(`Поиск: ${query}`)
+		setTasks(
+			tasks.map((task) => task.id === taskId ? { ...task, isDone } : task)
+		)
 	}
 
 	const addTask = () => {
-		console.log('Добавить задачу');
+		if (newTaskTitle.trim().length > 0) {
+			const newTask = {
+				id: crypto?.randomUUID() ?? Date.now().toString(),
+				title: newTaskTitle,
+				isDone: false,
+			}
+			setTasks([...tasks, newTask]);
+			setNewTaskTitle('');
+			setSearchQuery('');
+		}
 	}
+
+	useEffect(() => {
+		localStorage.setItem('tasks', JSON.stringify(tasks));
+	}, [tasks])
+
+	const clearSearchQuery = searchQuery.trim().toLowerCase();
+	const filterTasks = clearSearchQuery.length > 0
+		? tasks.filter(({ title }) => title.toLowerCase().includes(clearSearchQuery))
+		: null;
 
 	return (
 		<div className="todo">
 			<h1 className="todo__title">To Do List</h1>
 			<AddTaskForm
 				addTask={addTask}
+				newTaskTitle={newTaskTitle}
+				setNewTaskTitle={setNewTaskTitle}
 			/>
 			<SearchTaskForm
-				onSearchInput={filterTasks}
+				searchQuery={searchQuery}
+				setSearchQuery={setSearchQuery}
 			/>
 			<TodoInfo
 				total={tasks.length}
@@ -45,6 +83,7 @@ const Todo = () => {
 			/>
 			<TodoList
 				tasks={tasks}
+				filteredTasks={filterTasks}
 				onDeleteTaskButtonClick={deleteTask}
 				onTaskCompleteChange={ToggleTaskComplete}
 			/>
