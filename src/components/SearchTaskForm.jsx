@@ -11,7 +11,7 @@ const SearchTaskForm = () => {
 	return (
 		<form
 			className="todo__form"
-			onSubmit={(event) => { event.preventDefault }}
+			onSubmit={(event) => event.preventDefault()}
 		>
 			<Field
 				className="todo__field"
