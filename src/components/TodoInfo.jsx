@@ -13,8 +13,6 @@ const TodoInfo = () => {
 	}, [tasks]);
 	const hasTasks = total > 0;
 
-	// console.log('done', done);
-
 	return (
 		<div className="todo__info">
 			<div className="todo__total-tasks">
