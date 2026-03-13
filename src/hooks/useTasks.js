@@ -9,6 +9,8 @@ const useTasks = () => {
 
 	const [newTaskTitle, setNewTaskTitle] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
+	const [disapperingTaskId, setDisapperingTaskId] = useState(null);
+	const [apperingTaskId, setApperingTaskId] = useState(null);
 
 	const newTaskInputRef = useRef(null);
 
@@ -26,9 +28,11 @@ const useTasks = () => {
 	const deleteTask = useCallback((taskId) => {
 		tasksAPI.delete(taskId)
 			.then(() => {
-				setTasks(
-					tasks.filter((task) => task.id !== taskId)
-				)
+				setDisapperingTaskId(taskId);
+				setTimeout(() => {
+					setTasks(tasks.filter((task) => task.id !== taskId));
+					setDisapperingTaskId(null);
+				}, 400)
 			})
 	}, [tasks]);
 
@@ -50,6 +54,10 @@ const useTasks = () => {
 				setNewTaskTitle('');
 				setSearchQuery('');
 				newTaskInputRef.current.focus();
+				setApperingTaskId(addedTask.id);
+				setTimeout(() => {
+					setApperingTaskId(null)
+				}, 400);
 			})
 	}, [])
 
@@ -77,6 +85,8 @@ const useTasks = () => {
 		setSearchQuery,
 		newTaskInputRef,
 		addTask,
+		disapperingTaskId,
+		apperingTaskId,
 	}
 }
 

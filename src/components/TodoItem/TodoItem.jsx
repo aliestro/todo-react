@@ -1,4 +1,4 @@
-import { memo, useContext } from "react";
+import { memo, useContext, useRef } from "react";
 import { TasksContext } from "../../context/TasksContext";
 import RouterLink from "../RouterLink/RouterLink";
 import styles from "./TodoItem.module.scss";
@@ -10,14 +10,24 @@ const ToDoItem = (props) => {
 		title,
 		isDone,
 	} = props;
+
 	const {
 		firstIncopleteTaskRef,
 		firstIncopleteTaskId,
 		deleteTask,
 		toggleTaskComplete,
+		disapperingTaskId,
+		apperingTaskId,
 	} = useContext(TasksContext);
 
-	return (<li className={`${styles.todoItem} ${className}`} ref={id === firstIncopleteTaskId ? firstIncopleteTaskRef : null}>
+	return (<li
+		className={`
+			${styles.todoItem} 
+			${className} 
+			${disapperingTaskId === id ? styles.isDisappearing : ''}
+			${apperingTaskId === id ? styles.isAppering : ''}
+			`}
+		ref={id === firstIncopleteTaskId ? firstIncopleteTaskRef : null}>
 		<input
 			className={styles.checkbox}
 			id={id}
