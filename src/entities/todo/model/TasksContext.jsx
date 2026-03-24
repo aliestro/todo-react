@@ -24,10 +24,12 @@ export const TasksProvider = (props) => {
 		apperingTaskId,
 	} = useTasks();
 
+	const isSearching = searchQuery.trim().length > 0;
+
 	const {
 		firstIncopleteTaskRef,
 		firstIncopleteTaskId,
-	} = useIncompleteTaskScroll(tasks);
+	} = useIncompleteTaskScroll(isSearching ? filteredTasks : tasks);
 
 	const value = useMemo(() => ({
 		tasks,
