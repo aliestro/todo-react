@@ -7,10 +7,10 @@ import Button from "@/shared/ui/Button";
 const AddTaskForm = (props) => {
 	const { styles } = props;
 
+	const [newTaskTitle, setNewTaskTitle] = useState('');
+
 	const {
 		addTask,
-		newTaskTitle,
-		setNewTaskTitle,
 		newTaskInputRef,
 	} = useContext(TasksContext);
 
@@ -22,7 +22,8 @@ const AddTaskForm = (props) => {
 	const onSubmit = (event) => {
 		event.preventDefault();
 		if (!isNewTasksTitleEmpty) {
-			addTask(clearNewTaskTitle);
+			addTask(clearNewTaskTitle,
+				() => setNewTaskTitle(''));
 		}
 	}
 
