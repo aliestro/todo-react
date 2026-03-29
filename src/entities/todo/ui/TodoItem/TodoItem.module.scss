@@ -8,6 +8,7 @@
 
   &:hover {
     background-color: var(--color-gray-1);
+    color: var(--color-turquoise-1);
   }
 
   &.isDisappearing {
@@ -106,4 +107,11 @@
   * {
     pointer-events: none;
   }
+}
+
+a {
+  text-decoration: none;
+  /* Убирает подчеркивание */
+  color: inherit;
+  /* Ссылка принимает цвет текста родителя */
 }

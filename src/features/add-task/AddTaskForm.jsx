@@ -1,45 +1,56 @@
 import { useContext, useState } from "react";
-
 import Field from "@/shared/ui/Field";
 import { TasksContext } from "@/entities/todo";
 import Button from "@/shared/ui/Button";
 
+const MAX_LENGTH = 50;
+
+const VALIDATION_RULES = {
+	isOnlySpaces: (value) => value.length > 0 && value.trim().length === 0,
+	isTooLong: (value) => value.length > MAX_LENGTH,
+};
+
+const ERROR_MESSAGES = {
+	isOnlySpaces: 'Task cannot consist only of spaces',
+	isTooLong: `Maximum length is ${MAX_LENGTH} characters`,
+};
+
 const AddTaskForm = (props) => {
 	const { styles } = props;
-
 	const [newTaskTitle, setNewTaskTitle] = useState('');
-
-	const {
-		addTask,
-		newTaskInputRef,
-	} = useContext(TasksContext);
-
-	const clearNewTaskTitle = newTaskTitle.trim();
-	const isNewTasksTitleEmpty = newTaskTitle.trim().length === 0;
-
 	const [error, setError] = useState('');
+
+	const { addTask, newTaskInputRef } = useContext(TasksContext);
+
+	const isNewTasksTitleEmpty = newTaskTitle.trim().length === 0;
 
 	const onSubmit = (event) => {
 		event.preventDefault();
-		if (!isNewTasksTitleEmpty) {
-			addTask(clearNewTaskTitle,
-				() => setNewTaskTitle(''));
+		if (!isNewTasksTitleEmpty && !error) {
+			addTask(newTaskTitle.trim(), () => {
+				setNewTaskTitle('');
+				setError('');
+			});
 		}
 	}
 
 	const onInput = (event) => {
 		const { value } = event.target;
-		const clearValue = value.trim();
-		const hasOnlySpaces = value.length > 0 && clearValue.length === 0;
+
+		// if (value.length > MAX_LENGTH) {
+		// 	setError(ERROR_MESSAGES['isTooLong']);
+		// 	return;
+		// }
+
+		const errorKey = Object.keys(VALIDATION_RULES)
+			.find(key => VALIDATION_RULES[key](value));
+
 		setNewTaskTitle(value);
-		setError(hasOnlySpaces ? 'The task can not be empty' : '');
+		setError(ERROR_MESSAGES[errorKey] || '');
 	}
 
 	return (
-		<form
-			className={styles.form}
-			onSubmit={onSubmit}
-		>
+		<form className={styles.form} onSubmit={onSubmit}>
 			<Field
 				className={styles.field}
 				label="New task"
@@ -51,7 +62,7 @@ const AddTaskForm = (props) => {
 			/>
 			<Button
 				type="submit"
-				isDisabled={isNewTasksTitleEmpty}
+				isDisabled={isNewTasksTitleEmpty || !!error}
 			>
 				Add
 			</Button>

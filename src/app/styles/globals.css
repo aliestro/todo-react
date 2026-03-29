@@ -19,3 +19,8 @@ button {
   outline-offset: 4px;
   transition-duration: 0s !important;
 }
+
+::selection {
+  background-color: var(--color-turquoise-1);
+  filter: invert(1);
+}

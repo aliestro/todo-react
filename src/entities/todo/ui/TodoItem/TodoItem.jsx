@@ -4,6 +4,8 @@ import RouterLink from "@/shared/ui/RouterLink";
 import styles from "./TodoItem.module.scss";
 import { highlightCaseInsensitive } from "@/shared/utils/highlight";
 
+const MAX_LENGTH = 22;
+
 const ToDoItem = (props) => {
 	const {
 		className = '',
@@ -23,6 +25,16 @@ const ToDoItem = (props) => {
 	} = useContext(TasksContext);
 
 	const highlightedTitle = highlightCaseInsensitive(title, searchQuery);
+
+	const getDisplayTitle = () => {
+		if (highlightedTitle.length <= MAX_LENGTH) return highlightedTitle;
+
+		// Удаляем HTML теги для подсчета
+		const plainText = title;
+		if (plainText.length <= MAX_LENGTH) return highlightedTitle;
+
+		return plainText.slice(0, MAX_LENGTH) + '...';
+	};
 
 	return (<li
 		className={`
@@ -49,7 +61,9 @@ const ToDoItem = (props) => {
 		</label>
 		<RouterLink to={`tasks/${id}`} aria-label="Task detail page">
 			{/* {title} */}
-			<span dangerouslySetInnerHTML={{ __html: highlightedTitle }} />
+			<span
+				dangerouslySetInnerHTML={{ __html: getDisplayTitle() }}
+			/>
 		</RouterLink>
 		<button
 			className={styles.deleteButton}
