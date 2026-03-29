@@ -1,1 +1,1 @@
-{tasks:[{id:'a5d0',title:'2323',isDone:true},{id:'e902',title:'2322',isDone:true},{id:'c4c2',title:'24',isDone:true},{id:'ce0d',title:'55',isDone:true},{id:'8423',title:'555',isDone:false},{id:'e79d',title:'ора',isDone:true},{id:'ce87',title:'ора1',isDone:true},{id:'32e7',title:'ора2',isDone:true},{id:'154e',title:'ора3',isDone:false}],$schema:'./node_modules/json-server/schema.json'}
+{tasks:[{id:'aa18',title:'232323',isDone:false},{id:'ad54',title:'таска',isDone:false},{id:'18c3',title:'535353',isDone:false}],$schema:'./node_modules/json-server/schema.json'}
