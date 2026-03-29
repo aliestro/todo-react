@@ -1,5 +1,6 @@
 .field {
   position: relative;
+  user-select: none;
 
   &:has(.input:not(:placeholder-shown)) .label {
     color: var(--color-black);
