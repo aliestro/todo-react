@@ -11,6 +11,7 @@ const ToDoItem = (props) => {
 		className = '',
 		id,
 		title,
+		description,
 		isDone,
 	} = props;
 
@@ -36,6 +37,12 @@ const ToDoItem = (props) => {
 		return plainText.slice(0, MAX_LENGTH) + '...';
 	};
 
+	const getDisplayDescription = () => {
+		if (description.length <= MAX_LENGTH) return description;
+
+		return description.slice(0, MAX_LENGTH) + '...';
+	};
+
 	return (<li
 		className={`
 			${styles.todoItem} 
@@ -59,12 +66,20 @@ const ToDoItem = (props) => {
 		>
 			{title}
 		</label>
-		<RouterLink to={`tasks/${id}`} aria-label="Task detail page">
-			{/* {title} */}
+		<div className={styles.fields}>
+			<RouterLink to={`tasks/${id}`} aria-label="Task detail page">
+				{/* {title} */}
+				<span
+					className={styles.title}
+					dangerouslySetInnerHTML={{ __html: getDisplayTitle() }}
+				/>
+			</RouterLink>
 			<span
-				dangerouslySetInnerHTML={{ __html: getDisplayTitle() }}
-			/>
-		</RouterLink>
+				className={styles.description}
+			>
+				{getDisplayDescription()}
+			</span>
+		</div>
 		<button
 			className={styles.deleteButton}
 			aria-label="Delete"

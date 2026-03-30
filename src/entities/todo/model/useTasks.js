@@ -35,7 +35,7 @@ const useTasks = () => {
 	const [disapperingTaskId, setDisapperingTaskId] = useState(null);
 	const [apperingTaskId, setApperingTaskId] = useState(null);
 
-	const newTaskInputRef = useRef(null);
+	const newTaskTitleInputRef = useRef(null);
 
 	const deleteAllTasks = useCallback(() => {
 		const isConfirmed = confirm('Вы действительно хотите удалить все задачи?');
@@ -64,9 +64,10 @@ const useTasks = () => {
 			});
 	}, []);
 
-	const addTask = useCallback((title, callbackAfterAdding) => {
+	const addTask = useCallback((title, description, callbackAfterAdding) => {
 		const newTask = {
 			title,
+			description,
 			isDone: false,
 		}
 		tasksAPI.add(newTask)
@@ -74,7 +75,7 @@ const useTasks = () => {
 				dispatch({ type: 'ADD', task: addedTask });
 				callbackAfterAdding();
 				setSearchQuery('');
-				newTaskInputRef.current.focus();
+				newTaskTitleInputRef.current.focus();
 				setApperingTaskId(addedTask.id);
 				setTimeout(() => {
 					setApperingTaskId(null)
@@ -83,7 +84,7 @@ const useTasks = () => {
 	}, [])
 
 	useEffect(() => {
-		newTaskInputRef.current.focus();
+		newTaskTitleInputRef.current.focus();
 		tasksAPI.getAll().then((serverTasks) => {
 			dispatch({ type: 'SET_ALL', tasks: serverTasks })
 		});
@@ -104,7 +105,7 @@ const useTasks = () => {
 		toggleTaskComplete,
 		searchQuery,
 		setSearchQuery,
-		newTaskInputRef,
+		newTaskTitleInputRef,
 		addTask,
 		disapperingTaskId,
 		apperingTaskId,

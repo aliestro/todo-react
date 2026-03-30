@@ -21,7 +21,8 @@
 
 .form {
   display: flex;
-  column-gap: 16px;
+  flex-direction: column;
+  gap: 1.5em;
 }
 
 .field {

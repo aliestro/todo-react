@@ -11,6 +11,8 @@ const Field = (props) => {
 		error,
 	} = props;
 
+	// console.log(className);
+
 	return (
 		<div className={`${styles.field} ${className}`}>
 			<label

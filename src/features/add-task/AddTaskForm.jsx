@@ -3,68 +3,93 @@ import Field from "@/shared/ui/Field";
 import { TasksContext } from "@/entities/todo";
 import Button from "@/shared/ui/Button";
 
-const MAX_LENGTH = 50;
+const MAX_LENGTH = {
+	title: 50,
+	description: 200, // или любое другое значение
+};
 
 const VALIDATION_RULES = {
 	isOnlySpaces: (value) => value.length > 0 && value.trim().length === 0,
-	isTooLong: (value) => value.length > MAX_LENGTH,
+	isTooLong: (value, maxLength) => value.length > maxLength,
 };
 
 const ERROR_MESSAGES = {
 	isOnlySpaces: 'Task cannot consist only of spaces',
-	isTooLong: `Maximum length is ${MAX_LENGTH} characters`,
+	isTooLong: (maxLength) => `Maximum length is ${maxLength} characters`,
 };
 
 const AddTaskForm = (props) => {
 	const { styles } = props;
 	const [newTaskTitle, setNewTaskTitle] = useState('');
-	const [error, setError] = useState('');
+	const [newTaskDescription, setNewTaskDescription] = useState('');
+	const [error, setError] = useState({ title: '', description: '' });
 
-	const { addTask, newTaskInputRef } = useContext(TasksContext);
+	const { addTask, newTaskTitleInputRef } = useContext(TasksContext);
 
 	const isNewTasksTitleEmpty = newTaskTitle.trim().length === 0;
+	const hasError = error.title || error.description;
 
 	const onSubmit = (event) => {
 		event.preventDefault();
-		if (!isNewTasksTitleEmpty && !error) {
-			addTask(newTaskTitle.trim(), () => {
+		if (!isNewTasksTitleEmpty && !hasError) {
+			addTask(newTaskTitle.trim(), newTaskDescription.trim(), () => {
 				setNewTaskTitle('');
-				setError('');
+				setNewTaskDescription('');
+				setError({ title: '', description: '' });
 			});
 		}
 	}
 
-	const onInput = (event) => {
+	const onInput = (fieldName) => (event) => {
 		const { value } = event.target;
+		const maxLength = MAX_LENGTH[fieldName];
 
-		// if (value.length > MAX_LENGTH) {
-		// 	setError(ERROR_MESSAGES['isTooLong']);
-		// 	return;
-		// }
+		// Обновляем соответствующее состояние
+		if (fieldName === 'title') {
+			setNewTaskTitle(value);
+		} else {
+			setNewTaskDescription(value);
+		}
 
-		const errorKey = Object.keys(VALIDATION_RULES)
-			.find(key => VALIDATION_RULES[key](value));
+		// Валидация
+		let validationError = '';
 
-		setNewTaskTitle(value);
-		setError(ERROR_MESSAGES[errorKey] || '');
+		if (VALIDATION_RULES.isOnlySpaces(value)) {
+			validationError = ERROR_MESSAGES.isOnlySpaces;
+		} else if (VALIDATION_RULES.isTooLong(value, maxLength)) {
+			validationError = ERROR_MESSAGES.isTooLong(maxLength);
+		}
+
+		setError(prev => ({
+			...prev,
+			[fieldName]: validationError
+		}));
 	}
 
 	return (
 		<form className={styles.form} onSubmit={onSubmit}>
 			<Field
-				className={styles.field}
-				label="New task"
-				id="new-task"
+				className={styles.fieldTitle}
+				label="New task title"
+				id="new-task-title"
 				value={newTaskTitle}
-				error={error}
-				onInput={onInput}
-				ref={newTaskInputRef}
+				error={error.title}
+				onInput={onInput("title")}
+				ref={newTaskTitleInputRef}
+			/>
+			<Field
+				className={styles.field}
+				label="New task description"
+				id="new-task-description"
+				value={newTaskDescription}
+				error={error.description}
+				onInput={onInput("description")}
 			/>
 			<Button
 				type="submit"
-				isDisabled={isNewTasksTitleEmpty || !!error}
+				isDisabled={isNewTasksTitleEmpty || !!hasError}
 			>
-				Add
+				Add New Task
 			</Button>
 		</form>
 	)
