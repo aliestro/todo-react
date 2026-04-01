@@ -2,29 +2,31 @@
   position: relative;
   user-select: none;
 
-  &:has(.input:not(:placeholder-shown)) .label {
+  &:has(.textarea:not(:placeholder-shown)) .label {
     color: var(--color-black);
     scale: 0.7;
-    translate: -1em -2.5em;
+    translate: -1em -2em;
   }
 }
 
 .label {
   position: absolute;
-  top: 50%;
+  top: 1em;
   left: 17px;
   color: var(--color-gray-3);
-  // transform-origin: left top;
   translate: 0 -50%;
+  transform-origin: left top;
 }
 
-.input {
-  --fieldInputPaddingX: 16px;
-  --fieldSeachInputIconSize: 16px;
-
-  width: 100%;
-  min-height: var(--input-height);
+.textarea {
+  display: block;
+  --fieldInputPaddingX: 1em;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: calc(var(--input-height)*2);
+  max-height: calc(var(--input-height)*4);
   padding-inline: var(--fieldInputPaddingX);
+  // padding-block: calc(var(--fieldInputPaddingX)/2);
   background-color: transparent;
   border: var(--border);
   border-radius: var(--border-radius);
@@ -39,16 +41,8 @@
     outline: none;
   }
 
-  &[type="search"] {
-    min-width: 100%;
-
-    &:placeholder-shown {
-      // padding-right: calc(var(--fieldInputPaddingX) * 2 + var(--fieldSeachInputIconSize));
-      background-image: url('@/shared/assets/icons/icon-search_black.svg');
-      background-position: calc(100% - var(--fieldInputPaddingX)) 50%;
-      background-size: var(--fieldSeachInputIconSize);
-      background-repeat: no-repeat;
-    }
+  &::-webkit-scrollbar {
+    display: none;
   }
 
   &.isInvalid {

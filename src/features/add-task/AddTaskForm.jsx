@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import Field from "@/shared/ui/Field";
 import { TasksContext } from "@/entities/todo";
 import Button from "@/shared/ui/Button";
+import Textarea from "@/shared/ui/Textarea";
 
 const MAX_LENGTH = {
 	title: 50,
@@ -69,21 +70,30 @@ const AddTaskForm = (props) => {
 	return (
 		<form className={styles.form} onSubmit={onSubmit}>
 			<Field
-				className={styles.fieldTitle}
-				label="New task title"
+				className={styles.field}
+				label="Title"
 				id="new-task-title"
 				value={newTaskTitle}
 				error={error.title}
 				onInput={onInput("title")}
 				ref={newTaskTitleInputRef}
 			/>
-			<Field
-				className={styles.field}
-				label="New task description"
+			{/* <Field
+				className={styles.fieldDescription}
+				label="Description"
 				id="new-task-description"
 				value={newTaskDescription}
 				error={error.description}
 				onInput={onInput("description")}
+			/> */}
+			<Textarea
+				className={styles.field}
+				label="Description"
+				id="new-task-description"
+				value={newTaskDescription}
+				error={error.description}
+				onInput={onInput("description")}
+				ref={newTaskTitleInputRef}
 			/>
 			<Button
 				type="submit"
