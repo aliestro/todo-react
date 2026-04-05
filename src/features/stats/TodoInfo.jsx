@@ -7,6 +7,7 @@ const TodoInfo = (props) => {
 	const {
 		tasks,
 		deleteAllTasks,
+		selectTask,
 	} = useContext(TasksContext);
 
 	const total = tasks.length;
@@ -14,6 +15,11 @@ const TodoInfo = (props) => {
 		return tasks.filter(({ isDone }) => isDone).length;
 	}, [tasks]);
 	const hasTasks = total > 0;
+
+	const handleDeleteAll = () => {
+		deleteAllTasks();
+		selectTask(null);
+	}
 
 	return (
 		<div className={styles.info}>
@@ -24,7 +30,7 @@ const TodoInfo = (props) => {
 				<button
 					className={styles.deleteAllButton}
 					type="button"
-					onClick={deleteAllTasks}
+					onClick={handleDeleteAll}
 				>
 					Delete all
 				</button>

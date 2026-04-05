@@ -16,13 +16,15 @@ const ToDoItem = (props) => {
 	} = props;
 
 	const {
-		firstIncopleteTaskRef,
-		firstIncopleteTaskId,
+		firstIncompleteTaskRef,
+		firstIncompleteTaskId,
 		deleteTask,
 		toggleTaskComplete,
 		disapperingTaskId,
 		apperingTaskId,
 		searchQuery,
+		selectTask,
+		selectedTask,
 	} = useContext(TasksContext);
 
 	const highlightedTitle = highlightCaseInsensitive(title, searchQuery);
@@ -43,6 +45,25 @@ const ToDoItem = (props) => {
 		return description.slice(0, MAX_LENGTH) + '...';
 	};
 
+	const handleDelete = (event) => {
+		event.stopPropagation(); // Останавливаем всплытие события
+		deleteTask(id, () => {
+			if (selectedTask.id === id) {
+				selectTask(null);
+				console.log("Удаление", selectedTask);
+			}
+		});
+	};
+
+	const handleToggle = (event, checked) => {
+		event.stopPropagation(); // Останавливаем всплытие события
+		toggleTaskComplete(id, checked);
+	};
+
+	const handleSelect = () => {
+		selectTask(id);
+	};
+
 	return (<li
 		className={`
 			${styles.todoItem} 
@@ -50,14 +71,16 @@ const ToDoItem = (props) => {
 			${disapperingTaskId === id ? styles.isDisappearing : ''}
 			${apperingTaskId === id ? styles.isAppering : ''}
 			`}
-		ref={id === firstIncopleteTaskId ? firstIncopleteTaskRef : null}>
+		ref={id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}
+		onClick={handleSelect}
+	>
 		<input
 			className={styles.checkbox}
 			id={id}
 			type="checkbox"
 			checked={isDone}
-			onChange={({ target }) =>
-				toggleTaskComplete(id, target.checked)
+			onChange={(event) =>
+				handleToggle(event, event.target.checked)
 			}
 		/>
 		<label
@@ -84,7 +107,7 @@ const ToDoItem = (props) => {
 			className={styles.deleteButton}
 			aria-label="Delete"
 			title="Delete"
-			onClick={() => deleteTask(id)}
+			onClick={handleDelete}
 		>
 			<svg
 				width="20"

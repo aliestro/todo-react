@@ -9,6 +9,11 @@ const taskReducer = (state, action) => {
 		case 'ADD': {
 			return [...state, action.task];
 		}
+		case 'EDIT': {
+			return state.map((task) =>
+				task.id === action.task.id ? action.task : task
+			);
+		}
 		case 'TOGGLE_COMPLETE': {
 			const { id, isDone } = action;
 			return state.map((task) => {
@@ -34,22 +39,27 @@ const useTasks = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [disapperingTaskId, setDisapperingTaskId] = useState(null);
 	const [apperingTaskId, setApperingTaskId] = useState(null);
+	const [selectedTask, setSelectedTask] = useState(null);
 
 	const newTaskTitleInputRef = useRef(null);
 
-	const deleteAllTasks = useCallback(() => {
+	const deleteAllTasks = useCallback((callbackAfterDeleting) => {
 		const isConfirmed = confirm('Вы действительно хотите удалить все задачи?');
 
 		if (isConfirmed) {
 			tasksAPI.deleteAll(tasks).
-				then(() => dispatch({ type: 'DELETE_ALL' }));
+				then(() => {
+					dispatch({ type: 'DELETE_ALL' });
+					callbackAfterDeleting();
+				});
 		}
 	}, [tasks])
 
-	const deleteTask = useCallback((taskId) => {
+	const deleteTask = useCallback((taskId, callbackAfterDeleting) => {
 		tasksAPI.delete(taskId)
 			.then(() => {
 				setDisapperingTaskId(taskId);
+				callbackAfterDeleting();
 				setTimeout(() => {
 					dispatch({ type: 'DELETE', id: taskId });
 					setDisapperingTaskId(null);
@@ -83,6 +93,29 @@ const useTasks = () => {
 			})
 	}, [])
 
+	const editTask = useCallback((task, callbackAfterEditing) => {
+		tasksAPI.edit(task)
+			.then(() => {
+				dispatch({ type: 'EDIT', task })
+				callbackAfterEditing();
+			});
+	}, [])
+
+	const selectTask = useCallback((taskId) => {
+		if (taskId === null) {
+			setSelectedTask(null);
+			return;
+		}
+
+		tasksAPI.getById(taskId)
+			.then((task) => {
+				setSelectedTask(task);
+			})
+			.catch(error => {
+				console.error('Failed to load task:', error);
+			});
+	}, [])
+
 	useEffect(() => {
 		newTaskTitleInputRef.current.focus();
 		tasksAPI.getAll().then((serverTasks) => {
@@ -107,6 +140,9 @@ const useTasks = () => {
 		setSearchQuery,
 		newTaskTitleInputRef,
 		addTask,
+		editTask,
+		selectTask,
+		selectedTask,
 		disapperingTaskId,
 		apperingTaskId,
 	}

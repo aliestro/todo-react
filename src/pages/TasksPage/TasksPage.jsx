@@ -9,7 +9,7 @@ const TasksPage = () => {
 		<TasksProvider>
 			<main>
 				<Todo />
-				{/* <EditingWindow /> */}
+				<EditingWindow />
 			</main>
 		</TasksProvider>
 	)

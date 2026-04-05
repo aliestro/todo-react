@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import Field from "@/shared/ui/Field";
 import { TasksContext } from "@/entities/todo";
 import Button from "@/shared/ui/Button";
@@ -6,7 +6,7 @@ import Textarea from "@/shared/ui/Textarea";
 
 const MAX_LENGTH = {
 	title: 50,
-	description: 200, // или любое другое значение
+	description: 200,
 };
 
 const VALIDATION_RULES = {
@@ -19,23 +19,42 @@ const ERROR_MESSAGES = {
 	isTooLong: (maxLength) => `Maximum length is ${maxLength} characters`,
 };
 
-const AddTaskForm = (props) => {
+const EditingTaskForm = (props) => {
 	const { styles } = props;
-	const [newTaskTitle, setNewTaskTitle] = useState('');
-	const [newTaskDescription, setNewTaskDescription] = useState('');
+
+	const [title, setTitle] = useState('');
+	const [description, setDescription] = useState('');
 	const [error, setError] = useState({ title: '', description: '' });
 
-	const { addTask, newTaskTitleInputRef } = useContext(TasksContext);
+	const {
+		editTask,
+		newTaskTitleInputRef,
+		selectedTask,
+	} = useContext(TasksContext);
 
-	const isNewTasksTitleEmpty = newTaskTitle.trim().length === 0;
+	useEffect(() => {
+		console.log('Изменение');
+		if (selectedTask) {
+			setTitle(selectedTask.title);
+			setDescription(selectedTask.description);
+		}
+		else {
+			setTitle('');
+			setDescription('');
+		}
+	}, [selectedTask]);
+
+	const isTitleEmpty = title.trim().length === 0;
 	const hasError = error.title || error.description;
 
 	const onSubmit = (event) => {
 		event.preventDefault();
-		if (!isNewTasksTitleEmpty && !hasError) {
-			addTask(newTaskTitle.trim(), newTaskDescription.trim(), () => {
-				setNewTaskTitle('');
-				setNewTaskDescription('');
+		if (!isTitleEmpty && !hasError) {
+			selectedTask.title = title.trim();
+			selectedTask.description = description.trim();
+			editTask(selectedTask, () => {
+				setTitle('');
+				setDescription('');
 				setError({ title: '', description: '' });
 			});
 		}
@@ -47,9 +66,9 @@ const AddTaskForm = (props) => {
 
 		// Обновляем соответствующее состояние
 		if (fieldName === 'title') {
-			setNewTaskTitle(value);
+			setTitle(value);
 		} else {
-			setNewTaskDescription(value);
+			setDescription(value);
 		}
 
 		// Валидация
@@ -67,13 +86,17 @@ const AddTaskForm = (props) => {
 		}));
 	}
 
+	if (!selectedTask) {
+		return null;
+	}
+
 	return (
 		<form className={styles.form} onSubmit={onSubmit}>
 			<Field
 				className={styles.field}
 				label="Title"
-				id="new-task-title"
-				value={newTaskTitle}
+				id="edit-task-title"
+				value={title}
 				error={error.title}
 				onInput={onInput("title")}
 				ref={newTaskTitleInputRef}
@@ -81,20 +104,19 @@ const AddTaskForm = (props) => {
 			<Textarea
 				className={styles.field}
 				label="Description"
-				id="new-task-description"
-				value={newTaskDescription}
+				id="edit-task-description"
+				value={description}
 				error={error.description}
 				onInput={onInput("description")}
-				ref={newTaskTitleInputRef}
 			/>
 			<Button
 				type="submit"
-				isDisabled={isNewTasksTitleEmpty || !!hasError}
+				isDisabled={isTitleEmpty || !!hasError}
 			>
-				Add New Task
+				Edit Task
 			</Button>
 		</form>
 	)
 }
 
-export default AddTaskForm;
+export default EditingTaskForm;
