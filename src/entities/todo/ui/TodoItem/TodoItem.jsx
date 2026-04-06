@@ -48,7 +48,7 @@ const ToDoItem = (props) => {
 	const handleDelete = (event) => {
 		event.stopPropagation(); // Останавливаем всплытие события
 		deleteTask(id, () => {
-			if (selectedTask.id === id) {
+			if (selectedTask?.id === id) {
 				selectTask(null);
 				console.log("Удаление", selectedTask);
 			}

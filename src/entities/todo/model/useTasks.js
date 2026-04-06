@@ -142,6 +142,7 @@ const useTasks = () => {
 		addTask,
 		editTask,
 		selectTask,
+		setSelectedTask,
 		selectedTask,
 		disapperingTaskId,
 		apperingTaskId,

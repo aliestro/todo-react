@@ -1,12 +1,14 @@
-import AddTaskForm from '@/features/add-task'
-
-import Button from '@/shared/ui/Button'
 import styles from './EditingWindow.module.scss'
 import EditingTaskForm from '../../features/edit-task'
-
+import { useContext } from 'react'
+import { TasksContext } from "@/entities/todo";
 
 const EditingWindow = () => {
+	const { selectedTask } = useContext(TasksContext);
 
+	if (!selectedTask) {
+		return null;
+	}
 
 	return (
 		<div className={styles.todo}>

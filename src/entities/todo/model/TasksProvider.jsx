@@ -21,6 +21,7 @@ export const TasksProvider = (props) => {
 		editTask,
 		selectTask,
 		selectedTask,
+		setSelectedTask,
 		disapperingTaskId,
 		apperingTaskId,
 	} = useTasks();
@@ -45,6 +46,7 @@ export const TasksProvider = (props) => {
 		editTask,
 		selectTask,
 		selectedTask,
+		setSelectedTask,
 		disapperingTaskId,
 		apperingTaskId,
 		firstIncompleteTaskRef,
@@ -62,6 +64,7 @@ export const TasksProvider = (props) => {
 		editTask,
 		selectTask,
 		selectedTask,
+		setSelectedTask,
 		disapperingTaskId,
 		apperingTaskId,
 		firstIncompleteTaskRef,

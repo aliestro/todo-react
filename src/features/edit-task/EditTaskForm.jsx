@@ -30,10 +30,10 @@ const EditingTaskForm = (props) => {
 		editTask,
 		newTaskTitleInputRef,
 		selectedTask,
+		setSelectedTask,
 	} = useContext(TasksContext);
 
 	useEffect(() => {
-		console.log('Изменение');
 		if (selectedTask) {
 			setTitle(selectedTask.title);
 			setDescription(selectedTask.description);
@@ -49,6 +49,9 @@ const EditingTaskForm = (props) => {
 
 	const onSubmit = (event) => {
 		event.preventDefault();
+		if (!selectedTask) {
+			return;
+		}
 		if (!isTitleEmpty && !hasError) {
 			selectedTask.title = title.trim();
 			selectedTask.description = description.trim();
@@ -56,6 +59,8 @@ const EditingTaskForm = (props) => {
 				setTitle('');
 				setDescription('');
 				setError({ title: '', description: '' });
+				setSelectedTask(null);
+				console.log(selectedTask);
 			});
 		}
 	}
@@ -84,10 +89,6 @@ const EditingTaskForm = (props) => {
 			...prev,
 			[fieldName]: validationError
 		}));
-	}
-
-	if (!selectedTask) {
-		return null;
 	}
 
 	return (
