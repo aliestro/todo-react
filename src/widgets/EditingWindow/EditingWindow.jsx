@@ -1,5 +1,5 @@
 import styles from './EditingWindow.module.scss'
-import EditingTaskForm from '../../features/edit-task'
+import EditingTaskForm from '@/features/edit-task'
 import { useContext } from 'react'
 import { TasksContext } from "@/entities/todo";
 

@@ -85,7 +85,7 @@ const AddTaskForm = (props) => {
 				value={newTaskDescription}
 				error={error.description}
 				onInput={onInput("description")}
-				ref={newTaskTitleInputRef}
+			// ref={newTaskTitleInputRef}
 			/>
 			<Button
 				type="submit"
