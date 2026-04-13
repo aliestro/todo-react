@@ -1,17 +1,14 @@
-import styles from './Field.module.scss'
-const Field = (props) => {
+import styles from './Textarea.module.scss'
+const Textarea = (props) => {
 	const {
 		className = '',
 		id,
 		label,
-		type = 'text',
 		onInput,
+		maxLength,
 		value,
-		ref,
 		error,
 	} = props;
-
-	// console.log(className);
 
 	return (
 		<div className={`${styles.field} ${className}`}>
@@ -21,19 +18,18 @@ const Field = (props) => {
 			>
 				{label}
 			</label>
-			<input
-				className={`${styles.input} ${error ? styles.isInvalid : ''}`}
+			<textarea
+				className={`${styles.textarea} ${error ? styles.isInvalid : ''}`}
 				id={id}
+				onInput={onInput}
 				placeholder=" "
 				autoComplete="off"
-				type={type}
+				maxLength={maxLength}
 				value={value}
-				onInput={onInput}
-				ref={ref}
 			/>
 			{error && <div className={styles.error} title={error}>{error}</div>}
 		</div>
 	)
 }
 
-export default Field
+export default Textarea

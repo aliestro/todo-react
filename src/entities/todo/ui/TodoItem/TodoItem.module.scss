@@ -8,7 +8,7 @@
 
   &:hover {
     background-color: var(--color-gray-1);
-    color: var(--color-turquoise-1);
+    color: var(--color-coral-1);
   }
 
   &.isDisappearing {
@@ -79,6 +79,22 @@
 .label {
   width: 100%;
   pointer-events: none;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: .25em;
+  padding: 8px;
+}
+
+.title {
+  font-weight: 500;
+}
+
+.description {
+  font-size: .9rem;
+  color: var(--color-gray-4);
 }
 
 .deleteButton {

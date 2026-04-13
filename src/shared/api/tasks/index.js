@@ -22,6 +22,13 @@ const tasksAPI = {
 		})
 			.then((response) => response.json())
 	},
+	edit: (task) => {
+		return fetch(`${URL}/${task.id}`, {
+			method: 'PUT',
+			headers,
+			body: JSON.stringify(task),
+		})
+	},
 	delete: (id) => {
 		return fetch(`${URL}/${id}`, {
 			method: 'DELETE',

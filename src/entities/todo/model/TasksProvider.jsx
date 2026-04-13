@@ -16,8 +16,12 @@ export const TasksProvider = (props) => {
 		toggleTaskComplete,
 		searchQuery,
 		setSearchQuery,
-		newTaskInputRef,
+		newTaskTitleInputRef,
 		addTask,
+		editTask,
+		selectTask,
+		selectedTask,
+		setSelectedTask,
 		disapperingTaskId,
 		apperingTaskId,
 	} = useTasks();
@@ -25,8 +29,8 @@ export const TasksProvider = (props) => {
 	const isSearching = searchQuery.trim().length > 0;
 
 	const {
-		firstIncopleteTaskRef,
-		firstIncopleteTaskId,
+		firstIncompleteTaskRef,
+		firstIncompleteTaskId,
 	} = useIncompleteTaskScroll(isSearching ? filteredTasks : tasks);
 
 	const value = useMemo(() => ({
@@ -37,12 +41,16 @@ export const TasksProvider = (props) => {
 		toggleTaskComplete,
 		searchQuery,
 		setSearchQuery,
-		newTaskInputRef,
+		newTaskTitleInputRef,
 		addTask,
+		editTask,
+		selectTask,
+		selectedTask,
+		setSelectedTask,
 		disapperingTaskId,
 		apperingTaskId,
-		firstIncopleteTaskRef,
-		firstIncopleteTaskId,
+		firstIncompleteTaskRef,
+		firstIncompleteTaskId,
 	}), [
 		tasks,
 		filteredTasks,
@@ -51,12 +59,16 @@ export const TasksProvider = (props) => {
 		toggleTaskComplete,
 		searchQuery,
 		setSearchQuery,
-		newTaskInputRef,
+		newTaskTitleInputRef,
 		addTask,
+		editTask,
+		selectTask,
+		selectedTask,
+		setSelectedTask,
 		disapperingTaskId,
 		apperingTaskId,
-		firstIncopleteTaskRef,
-		firstIncopleteTaskId,
+		firstIncompleteTaskRef,
+		firstIncompleteTaskId,
 	]);
 
 	return (
